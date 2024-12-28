@@ -1,0 +1,55 @@
+#include<bits/stdc++.h>
+using namespace std;
+using pii=pair<int,int>;
+const int N=1e4+5;
+vector<pii> g[N];
+int dis[N];
+bool vis[N];
+
+int main(){
+	ios::sync_with_stdio(0); cin.tie(0);
+	int n,m,a,k;
+	while(cin >> n >> m >> a >> k){
+		if(n+m+a+k==0) return 0;
+		for(int i=1;i<=n;i++){
+			dis[i]=1e9;
+			vis[i]=false;
+			g[i].clear();
+		}		
+		priority_queue<pii,vector<pii>,greater<pii>> q;
+		for(int i=1;i<=m;i++){
+			int u,v,w;
+			cin >> u >> v >> w;
+			g[u].push_back({v,w});
+			g[v].push_back({u,w});
+		}
+
+//		memset(dis,0x3f,sizeof dis);
+//		memset(vis,false,sizeof vis);
+		int cnt=0;
+		while(a--){
+			int t;
+			cin >> t;
+			q.push({dis[t]=0,t});
+			while(!q.empty()){
+				auto l=q.top().first;
+				auto x=q.top().second;
+				q.pop();
+//				cout << l << ' ' << x << "\n";
+				if(vis[x]==false) cnt++;
+				vis[x]=true;
+				for(auto e:g[x]){
+					auto xx=e.first;
+					auto ll=e.second;
+					if(l+ll>=k) continue;
+					if(dis[xx]>dis[x]+ll){
+						dis[xx]=dis[x]+ll;
+						q.push({dis[xx],xx});
+					}
+				}
+			}
+			cout << n-cnt << "\n";
+		}
+		cout << "\n";
+	}
+}
